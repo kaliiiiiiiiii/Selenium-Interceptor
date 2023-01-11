@@ -16,7 +16,7 @@
 ### Installing
 
 * [Windows] Install [Chrome-Browser](https://www.google.de/chrome/)
-* ```pip install selenium-interceptor```
+* ```pip install selenium_interceptor```
 
 
 ### Change-headers
