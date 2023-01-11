@@ -14,12 +14,12 @@ setuptools.setup(
     keywords='Selenium,interception, proxy, webautomation',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/kaliiiiiiiiii/Selenium_Profiles',
+    url='https://github.com/kaliiiiiiiiii/selenium_interceptor',
     project_urls={
-        'Documentation': 'https://github.com/kaliiiiiiiiii/Selenium_Profiles',
+        'Documentation': 'https://github.com/kaliiiiiiiiii/selenium_interceptor',
         'Bug Reports':
-            'https://github.com/kaliiiiiiiiii/Selenium_Profiles/issues',
-        'Source Code': 'https://github.com/kaliiiiiiiiii/Selenium_Profiles',
+            'https://github.com/kaliiiiiiiiii/selenium_interceptor/issues',
+        'Source Code': 'https://github.com/kaliiiiiiiiii/selenium_interceptor',
     },
     package_dir={'': 'src'},
     packages=setuptools.find_packages(where='src'),
