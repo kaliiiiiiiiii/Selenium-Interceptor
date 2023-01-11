@@ -34,7 +34,7 @@ driver = mydriver.start(profile)
 
 cdp_listener = cdp_listener(driver=driver)
 cdp_listener.specify_headers({"sec-ch-ua-platform":"Android"})
-thread = cdp_listener.start_threaded(listener={"listener": cdp_listener.all_requests, "at_event": cdp_listener.modify_headers})
+thread = cdp_listener.start_threaded(listener={"listener": cdp_listener.requests, "at_event": cdp_listener.modify_headers})
 
 driver.get("https://modheader.com/headers?product=ModHeader")
 ```
