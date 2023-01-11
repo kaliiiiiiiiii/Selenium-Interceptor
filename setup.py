@@ -10,7 +10,7 @@ setuptools.setup(
     name='selenium_interceptor',
     author='Aurin Aegerter',
     author_email='aurinliun@gmx.ch',
-    description='Intercept request using Selenium with Chrome',
+    description='Intercept requests using Selenium with Chrome',
     keywords='Selenium,interception, proxy, webautomation',
     long_description=long_description,
     long_description_content_type='text/markdown',
