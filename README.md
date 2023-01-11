@@ -72,5 +72,5 @@ I am not responsible what you use the code for!!! Also no warranty!
 
 Inspiration, code snippets, etc.
 * [Selenium-Profiles](https://github.com/kaliiiiiiiiii/Selenium-Profiles)
-* [Chromedriver-Options List](https://peter.sh/experiments/chromium-command-line-switches/)
+* [Chrome-devtools-protocol](https://chromedevtools.github.io/devtools-protocol/tot/Fetch/#method-enable)
 * [cdp_event_listeners](https://stackoverflow.com/questions/66227508/selenium-4-0-0-beta-1-how-add-event-listeners-in-cdp)
