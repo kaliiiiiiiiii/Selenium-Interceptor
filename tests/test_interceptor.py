@@ -22,7 +22,7 @@ class Driver(unittest.TestCase):
         driver = return_driver()
         cdp_listener = cdp_listener(driver=driver)
         cdp_listener.specify_headers({"sec-ch-ua-platform": my_platform})
-        thread = cdp_listener.start_threaded(listener={"listener": cdp_listener.all_requests, "at_event": cdp_listener.modify_headers})
+        thread = cdp_listener.start_threaded(listener={"listener": cdp_listener.requests, "at_event": cdp_listener.modify_headers})
 
         driver.get('https://modheader.com/headers?product=ModHeader')
         time.sleep(4)
