@@ -1,52 +1,62 @@
+import time
+
+
 class cdp_listener(object):
     from typing import Dict
 
     def __init__(self, driver):
-        self.listeners = {}
+        self.listener = {}
         self.driver = driver
-        self.my_headers= None
+        self.my_headers = None
+        self.thread = None
+        self.has_started = None
+
     async def async_helper(self):
         async with self.driver.bidi_connection() as connection:
             session, devtools = connection.session, connection.devtools
 
-            for listener in self.listeners.items():
-                my_listener = await listener[1]["listener"](connection=connection)
-
-                async for event in my_listener:
-                    try:
-                        await session.execute(await listener[1]["at_event"](event=event, connection=connection))
-                    except Exception as e:
-                        if -32602 in e.__dict__.values():
-                            print(e) # 'Invalid InterceptionId.'
-                        else:
-                            raise e
+            my_listener = await self.listener["listener"](connection=connection)
+            async for event in my_listener:
+                try:
+                    await session.execute(await self.listener["at_event"](event=event, connection=connection))
+                except Exception as e:
+                    if -32602 in e.__dict__.values():
+                        print(e)  # 'Invalid InterceptionId.'
+                    else:
+                        raise e
 
     def trio_helper(self):
         import trio
+        self.has_started = True
         trio.run(self.async_helper)
 
-    def start_threaded(self, listeners: Dict[str,Dict[callable, callable]] = {}):
-        if listeners:
-            self.listeners = listeners
+    def start_threaded(self, listener: Dict[str, callable] = {}):
+        if listener:
+            self.listener = listener
 
         import threading
         thread = threading.Thread(target=self.trio_helper)
+        self.thread = thread
         thread.start()
+
+        while True:
+            time.sleep(0.1)
+            if self.has_started:
+                break
+
         return thread
 
-    def add_listeners(self, listeners: Dict[str,Dict[callable, callable]]):
-        self.listeners = listeners
-
-    def remove_listener(self, listener:str):
-        del self.listeners[listener]
-
-    def connection_refused(self,event, connection):
+    def connection_refused(self, event, connection):
         self.print_event(event)
 
         session, devtools = connection.session, connection.devtools
         # show_image(event.request.url)
         return devtools.fetch.fail_request(request_id=event.request_id,
                                            error_reason=devtools.network.ErrorReason.CONNECTION_REFUSED)
+
+    async def get_response_body(self, connection, request_id):
+        session, devtools = connection.session, connection.devtools
+        await session.execute(devtools.fetch.get_response_body(request_id))
 
     async def modify_headers(self, event, connection):
         self.print_event(event)
@@ -66,8 +76,34 @@ class cdp_listener(object):
 
         return devtools.fetch.continue_request(request_id=event.request_id, headers=my_headers)
 
-    def specify_headers(self, headers:Dict[str, str]):
+    def specify_headers(self, headers: Dict[str, str]):
         self.my_headers = headers
+
+    def decode_body(body: str, response, encoding="utf-8"):
+        import base64
+        import json
+        if body:
+            decoded = base64.b64decode(body).decode(encoding=encoding, errors="replace")
+            rep_type = response.resource_type.name
+            if rep_type == "XHR":
+                try:
+                    decoded = json.loads(decoded)
+                except Exception as e:
+                    print(e)
+            return decoded
+        else:
+            return body
+
+    def encode_body(decoded: str or dict, encoding="utf-8"):
+        import base64
+        import json
+        if decoded:
+            if not type(decoded) is str:
+                decoded = json.dumps(decoded)
+            encoded = base64.b64encode(decoded.encode(encoding=encoding, errors="replace")).decode(encoding=encoding)
+            return encoded
+        else:
+            return decoded
 
     async def all_images(self, connection):
         session, devtools = connection.session, connection.devtools
@@ -98,3 +134,10 @@ class cdp_listener(object):
 
     def print_event(self, event):
         print({"type": event.resource_type.to_json(), "frame_id": event.frame_id, "url": event.request.url})
+
+    def terminate_all(self):
+        from selenium_interceptor.scripts.multi_thread import terminate_thread
+        terminate_thread(self.thread)
+        self.thread.join()
+        self.has_started = False
+        self.driver.quit()

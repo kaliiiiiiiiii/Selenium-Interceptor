@@ -22,15 +22,20 @@
 ### Change-headers
 ```python
 
-from selenium_profiles.scripts.cdp_tools import cdp_listener
+from selenium_interceptor.interceptor import cdp_listener
 
-# Note: driver allready initialized
+from selenium_profiles import driver as mydriver
+from selenium_profiles.profiles import profiles
+
+mydriver = mydriver()
+profile = profiles.Windows()
+
+driver = mydriver.start(profile)
 
 cdp_listener = cdp_listener(driver=driver)
 cdp_listener.specify_headers({"sec-ch-ua-platform":"Android"})
-thread = cdp_listener.start_threaded(listeners= {
-                                                "header_mod":{"listener":cdp_listener.all_requests,"at_event":cdp_listener.modify_headers},
-                                                 })
+thread = cdp_listener.start_threaded(listener={"listener": cdp_listener.all_requests, "at_event": cdp_listener.modify_headers})
+
 driver.get("https://modheader.com/headers?product=ModHeader")
 ```
 Don't forget to execute

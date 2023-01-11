@@ -3,3 +3,4 @@ selenium==4.7.2 # 4.1.0 for touch_actions
 setuptools==65.6.3
 selenium_profiles
 pillow~=9.4
+trio
