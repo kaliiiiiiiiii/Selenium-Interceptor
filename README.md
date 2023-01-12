@@ -1,6 +1,6 @@
 # Selenium-Interceptor
 
-* Modifying or **adding headers**(#Change-headers)
+* Modifying or [adding headers](#Change-headers)
 * Modify response
 
 ### Feel free to test my code!
