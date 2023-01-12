@@ -39,8 +39,8 @@ thread = cdp_listener.start_threaded(listener={"listener": cdp_listener.requests
 driver.get("https://modheader.com/headers?product=ModHeader")
 ```
 Don't forget to execute
-```driver.quit()```
-in the End. Else-wise your temporary folder will get flooded! (Windows)
+`cdp_listener.terminate_all()`
+in the End. Else-wise your temporary folder will get flooded! (Windows) and it keeps running
 
 ## Help
 

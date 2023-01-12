@@ -176,5 +176,4 @@ class cdp_listener(object):
     def terminate_thread(self):
         from selenium_interceptor.scripts.multi_thread import terminate_thread
         terminate_thread(self.thread)
-        self.thread.join()
         self.is_running = False
